@@ -64,6 +64,14 @@ var Poststable = React.createClass({
 });
 
 var Searchbar = React.createClass({
+	handleSubmit: function(e){
+		e.preventDefault();
+		var tieba_name = this.refs.tieba_name.getDOMNode().value.trim();
+		var deepth = this.refs.deepth.getDOMNode().value.trim();
+		var least_reply = this.refs.least_reply.getDOMNode().value.trim();
+		var author = this.refs.author.getDOMNode().value.trim();
+		this.props.onParaSubmit({tieba_name: tieba_name, author: author, least_reply: least_reply, deepth: deepth});
+	},	
 	render: function() {
 		return (
 			<div className='navbar navbar-inverse'>
@@ -75,18 +83,18 @@ var Searchbar = React.createClass({
             </div>
             <div className="row">
             <div className="navbar-collapse collapse text-center">
-                    <form className="navbar-form" role="form">
+                    <form className="navbar-form" role="form" onSubmit={this.handleSubmit}>
                         <div className='form-group'>
-                            <input name='tieba_name' type="text" placeholder='tieba name' className='form-control' />
+                            <input ref='tieba_name' type="text" placeholder='tieba name' className='form-control' />
                         </div>
                         <div className='form-group'>
-                            <input name='deepth' type="text" placeholder='deepth' className='form-control' />
+                            <input ref='deepth' type="text" placeholder='deepth' className='form-control' />
                         </div>
                         <div className='form-group'>
-                            <input name='least_reply' type="text" placeholder='least reply' className='form-control' />
+                            <input ref='least_reply' type="text" placeholder='least reply' className='form-control' />
                         </div>
                         <div className='form-group'>
-                            <input name='author' type="text" placeholder='author' className='form-control' />
+                            <input ref='author' type="text" placeholder='author' className='form-control' />
                         </div>
                         <button type="submit" className='btn btn-success'>GO</button>
                     </form>
@@ -98,16 +106,22 @@ var Searchbar = React.createClass({
 });
 
 var Filtertable = React.createClass({
+	handleParaSubmit: function(para) {
+		send_para(para);
+	},
 	componentDidMount: function() {
 		socket.on('tieba_dig', function(posts){
 			this.setState({posts: posts});
 		}.bind(this));
 	},
+	getInitialState: function() {
+		return {posts: []};
+	},
 	render: function() {
 		return (
 			<div>
-			<Searchbar />
-			<Poststable posts={this.states.posts} />
+			<Searchbar onParaSubmit={this.handleParaSubmit}/>
+			<Poststable posts={this.state.posts} />
 			</div>
 			);
 	},
