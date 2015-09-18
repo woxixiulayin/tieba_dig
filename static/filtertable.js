@@ -18,10 +18,15 @@ var posts = [
 ]
 
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-
 var send_para = function(para) {
 	socket.emit('tieba_dig', para);
-}
+};
+
+var status = {
+	init: 0,
+	finding: 1,
+	finish: 2
+};
 
 var Postrow = React.createClass({
 	render: function() {
@@ -48,9 +53,16 @@ var Postrow = React.createClass({
 
 var Poststable = React.createClass({
 	render: function() {
-			if(this.props.posts.length === 0)
-				return (<h2 className='text-center'> there is no post found,please input the condition</h2>);
-			else {
+			if(this.props.status === status.init){
+				return (<h2 className="text-center">please input your seraching condition</h2>);
+				}
+			else if(this.props.status === status.finding){
+				return (<h2 className='text-center'>server is searching posts under your condition, please wait...</h2>);
+				}
+			else{
+				if(this.props.posts.length === 0)
+					return (<h2 className='text-center'> there is no post found,please input the correct condition</h2>);
+				else {
 					var posts_list = this.props.posts.map(function(post) {
 						return (<Postrow post={post} />);
 					});
@@ -60,6 +72,7 @@ var Poststable = React.createClass({
 						</ul>
 						);
 				}
+			}	
 			}
 });
 
@@ -108,20 +121,21 @@ var Searchbar = React.createClass({
 var Filtertable = React.createClass({
 	handleParaSubmit: function(para) {
 		send_para(para);
+		this.setState({status: status.finding});
 	},
 	componentDidMount: function() {
 		socket.on('tieba_dig', function(posts){
-			this.setState({posts: posts});
+			this.setState({posts: posts,status: status.finish});
 		}.bind(this));
 	},
 	getInitialState: function() {
-		return {posts: []};
+		return {posts: [], status: status.init};
 	},
 	render: function() {
 		return (
 			<div>
 			<Searchbar onParaSubmit={this.handleParaSubmit}/>
-			<Poststable posts={this.state.posts} />
+			<Poststable posts={this.state.posts} status={this.state.status}/>
 			</div>
 			);
 	},
