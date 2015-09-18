@@ -67,10 +67,10 @@ var Searchbar = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
 		var tieba_name = this.refs.tieba_name.getDOMNode().value.trim();
-		var deepth = this.refs.deepth.getDOMNode().value.trim();
-		var least_reply = this.refs.least_reply.getDOMNode().value.trim();
+		var deepth = parseInt(this.refs.deepth.getDOMNode().value.trim());
+		var rep_num = parseInt(this.refs.rep_num.getDOMNode().value.trim());
 		var author = this.refs.author.getDOMNode().value.trim();
-		this.props.onParaSubmit({tieba_name: tieba_name, author: author, least_reply: least_reply, deepth: deepth});
+		this.props.onParaSubmit({tieba_name: tieba_name, author: author, rep_num: rep_num, deepth: deepth});
 	},	
 	render: function() {
 		return (
@@ -91,12 +91,12 @@ var Searchbar = React.createClass({
                             <input ref='deepth' type="text" placeholder='deepth' className='form-control' />
                         </div>
                         <div className='form-group'>
-                            <input ref='least_reply' type="text" placeholder='least reply' className='form-control' />
+                            <input ref='rep_num' type="text" placeholder='least reply' className='form-control' />
                         </div>
                         <div className='form-group'>
                             <input ref='author' type="text" placeholder='author' className='form-control' />
                         </div>
-                        <button type="submit" className='btn btn-success'>GO</button>
+                        <input type="submit" className='btn btn-success' value='GO'/>
                     </form>
                 </div>
             </div>

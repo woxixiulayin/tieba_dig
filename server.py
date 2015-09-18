@@ -2,6 +2,7 @@
 #!conding:utf-8
 from flask import Flask, render_template, Response, request
 from flask.ext.socketio import SocketIO, send, emit
+from rat import Tieba_url, Query
 import json
 
 app = Flask(__name__)
@@ -17,24 +18,15 @@ def index():
 @socketio.on(event_name)
 def handle_search_para(para):
     print para
+    print type(para['rep_num'])
     posts = []
+    try:
+        query = Query(para)
+        print 'done'
+        posts = query.find()
+    except StandardError, e:
+        print e
     emit(event_name, posts)
-
-# @app.route('/comments.json', methods=['GET', 'POST'])
-# def comments_handler():
-
-#     with open('comments.json', 'r') as file:
-#         comments = json.loads(file.read())
-
-#     if request.method == 'POST':
-#         comments.append(request.form.to_dict())
-
-#         with open('comments.json', 'w') as file:
-#             file.write(json.dumps(comments, indent=4, separators=(',', ': ')))
-
-#     return Response(json.dumps(comments), mimetype='application/json', headers={'Cache-Control': 'no-cache'})
-
-
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=8888)
