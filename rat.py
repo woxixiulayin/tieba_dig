@@ -2,7 +2,7 @@
 #! coding:utf-8
 import urllib2
 import json
-from BeautifulSoup import BeautifulSoup
+#from BeautifulSoup import BeautifulSoup
 from lxml import etree
 import socket
 import chardet
@@ -90,7 +90,7 @@ class My_url():
         # self.save()
 
     def prettify(self):
-        self.content = BeautifulSoup(self.content).prettify()
+        #self.content = BeautifulSoup(self.content).prettify()
         return self.content
 
     def save(self, filename='my.html'):

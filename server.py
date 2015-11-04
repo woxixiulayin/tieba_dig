@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 #!conding:utf-8
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template
 from flask.ext.socketio import SocketIO, send, emit
-from rat import Tieba_url, Query
-import json
+from rat import Query
+# import json
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -30,3 +30,6 @@ def handle_search_para(para):
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=8888)
+else:
+    from bae.core.wsgi import WSGIApplication
+    application = WSGIApplication(socketio)
